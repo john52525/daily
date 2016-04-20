@@ -14,10 +14,6 @@ public class SpringContextUtil implements ApplicationContextAware {
 
     /**
      * 从当前IOC获取bean
-     *
-     * @param <T>
-     * @param id  bean的id
-     * @return
      */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String beanId) {
@@ -28,10 +24,6 @@ public class SpringContextUtil implements ApplicationContextAware {
 
     /**
      * 从当前IOC获取bean
-     *
-     * @param <T>
-     * @param id  bean的id
-     * @return
      */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(Class<T> clazz) {

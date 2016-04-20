@@ -95,8 +95,6 @@ public class JdbcRealm extends AuthorizingRealm {
         NO_SALT, CRYPT, COLUMN, EXTERNAL
     }
 
-    ;
-
     /*--------------------------------------------
     |    I N S T A N C E   V A R I A B L E S    |
     ============================================*/
@@ -207,8 +205,6 @@ public class JdbcRealm extends AuthorizingRealm {
 
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         String username = upToken.getUsername();
-        String password001 = new String((char[]) token.getCredentials());
-        System.out.println("\n\n\n\n\n\npassword is " + password001 + "\n\n\n\n\n\n\n");
         // Null username is invalid
         if (username == null) {
             throw new AccountException("Null usernames are not allowed by this realm.");
@@ -216,10 +212,9 @@ public class JdbcRealm extends AuthorizingRealm {
 
         Connection conn = null;
         SimpleAuthenticationInfo info = null;
+        String password = null;
         try {
             conn = dataSource.getConnection();
-
-            String password = null;
             String salt = null;
             switch (saltStyle) {
                 case NO_SALT:
@@ -260,7 +255,6 @@ public class JdbcRealm extends AuthorizingRealm {
         } finally {
             JdbcUtils.closeConnection(conn);
         }
-
         return info;
     }
 
@@ -308,7 +302,6 @@ public class JdbcRealm extends AuthorizingRealm {
             JdbcUtils.closeResultSet(rs);
             JdbcUtils.closeStatement(ps);
         }
-        System.out.println("result size:" + result.length + ",result=" + result[0]);
         return result;
     }
 

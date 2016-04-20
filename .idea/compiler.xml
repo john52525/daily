@@ -25,7 +25,7 @@
         <module name="daily" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.7">
+    <bytecodeTargetLevel target="1.8">
       <module name="daily" target="1.6" />
     </bytecodeTargetLevel>
   </component>
