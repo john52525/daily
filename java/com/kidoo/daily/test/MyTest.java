@@ -1,50 +1,168 @@
 package com.kidoo.daily.test;
 
-import com.kidoo.daily.utils.HttpRequester;
+import com.hjzx.framework.socket.tools.Tools;
 import com.kidoo.daily.utils.json.JSONObject;
+import org.apache.http.*;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.Socket;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by Administrator on 2016/4/16.
- */
 public class MyTest {
 
-    /*{
-      "渠道号":"TRM",
-      "渠道日期":"20160414",
-      "渠道流水号":"d7eafd51-60d4-4b5f-a5c7-69f3d180d12a",
-      "操作机构ID":1,
-      "操作柜员ID":1,
-      "交易码":"充值"
-      "请求": {
-          "充值来源户ID":108,
-          "个人户ID":107,
-          "金额":10000.0
-      }
-    }*/
     public static void main(String args[]) {
-        HttpRequester httpRequester = new HttpRequester();
-        Map qMap = new HashMap<String, String>();
-        JSONObject qJSONObeject = new JSONObject();
-        qJSONObeject.put("渠道号", "TRM");
-        qJSONObeject.put("渠道日期", "20160414");
-        qJSONObeject.put("渠道流水号", "d7eafd51-60d4-4b5f-a5c7-69f3d180d12a");
-        qJSONObeject.put("操作机构ID", "1");
-        qJSONObeject.put("操作柜员ID", "1");
-        qJSONObeject.put("交易码", "充值");
-        JSONObject eJSONObeject = new JSONObject();
-        eJSONObeject.put("充值来源户ID", "108");
-        eJSONObeject.put("个人户ID", "107");
-        eJSONObeject.put("金额", "10000.0");
-        qJSONObeject.put("请求", eJSONObeject);
+        MyTest myTest = new MyTest();
+        myTest.get();
+    }
+
+    public static void httpRequest() {
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost("http://127.0.0.1:31311/service/exec");
+        JSONObject params = new JSONObject();
+        params.put("渠道号", "TRM");
+        params.put("渠道日期", "20160414");
+        params.put("渠道流水号", "d7eafd51-60d4-4b5f-a5c7-69f3d180d12a");
+        params.put("操作机构ID", 89);
+        params.put("操作柜员ID", 0);
+        params.put("交易码", "充值");
+
+        JSONObject params2 = new JSONObject();
+        params2.put("充值来源户ID ", 23);
+        params2.put("个人户ID", 22);
+        params2.put("金额", 10000.0);
+
+        params.put("请求", params2);
+
+        System.out.println("===>" + params.toString());
         try {
-            httpRequester.sendPost("http://127.0.0.1:31311", qMap);
+            post.addHeader("Content-type", "application/json; charset=utf-8");
+            post.setHeader("Accept", "application/json");
+            post.setEntity(new StringEntity(params.toString(), Charset.forName("UTF-8")));
+            HttpResponse res = client.execute(post);
+            if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+
+                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
+                System.out.println("响应--->>>" + result);
+            } else {
+                System.out.println("失败--->>>" + res.getStatusLine().getStatusCode());
+            }
+            post.abort();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 发送 get请求
+     */
+    public void get() {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        try {
+            // 创建httpget.
+            HttpGet httpget = new HttpGet("http://www.baidu.com/");
+            System.out.println("executing request " + httpget.getURI());
+            // 执行get请求.
+            CloseableHttpResponse response = httpclient.execute(httpget);
+            try {
+                // 获取响应实体
+                HttpEntity entity = response.getEntity();
+                System.out.println("--------------------------------------");
+                // 打印响应状态
+                System.out.println(response.getStatusLine());
+                if (entity != null) {
+                    // 打印响应内容长度
+                    System.out.println("Response content length: " + entity.getContentLength());
+                    // 打印响应内容
+                    //System.out.println("Response content: " + EntityUtils.toString(entity));
+                }
+                System.out.println("------------------------------------");
+            } finally {
+                response.close();
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            // 关闭连接,释放资源
+            try {
+                httpclient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    public void tcpRequest() throws IOException {
+        try {
+            Socket socket = new Socket("127.0.0.1", 31301);
+
+            JSONObject qJSONObject = new JSONObject();
+
+            JSONObject wJSONObject = new JSONObject();
+            wJSONObject.put("充值来源户ID", 14);
+            wJSONObject.put("个人户ID", 13);
+            wJSONObject.put("金额", 10000.0);
+            qJSONObject.put("请求", wJSONObject);
+
+            qJSONObject.put("渠道号", "TRM");
+            qJSONObject.put("渠道日期", "20160421");
+            qJSONObject.put("渠道流水号", "d7eafd51-60d4-4b5f-a5c7-69f3d180d12a");
+            qJSONObject.put("操作机构ID", 67);
+            qJSONObject.put("操作柜员ID", 0);
+            qJSONObject.put("交易码", "充值");
+            String msg = qJSONObject.toString();
+            int len = msg.getBytes("utf-8").length;
+            msg = Tools.addLeftZero(len + "", 7) + msg;
+            System.out.println("after json format ===>>>>" + msg);
+
+
+            OutputStream outputStream = socket.getOutputStream();
+            outputStream.write(msg.getBytes("utf-8"));
+            outputStream.flush();
+
+            InputStream inputstream = socket.getInputStream();
+            byte[] bytes = new byte[1024];
+            int n = inputstream.read(bytes);
+            System.out.println("from server ===>>>" + new String(bytes, 0, n));
+
+
+            outputStream.close();
+            inputstream.close();
+            socket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+    }
+
+    public void test() throws UnsupportedEncodingException {
+        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+        formparams.add(new BasicNameValuePair("param1", "value1"));
+        formparams.add(new BasicNameValuePair("param2", "value2"));
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
+        HttpPost httppost = new HttpPost("http://localhost/handler.do");
+        httppost.setEntity(entity);
     }
 
 }

@@ -57,6 +57,12 @@
           <element id="library" level="project" name="Maven: org.apache.shiro:shiro-web:1.2.3" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.4" />
           <element id="library" level="project" name="Maven: org.junit:com.springsource.org.junit:4.7.0" />
+          <element id="file-copy" path="D:/source_code/framework-service.jar" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.2" />
+          <element id="library" level="project" name="Maven: commons-httpclient:commons-httpclient:3.1" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.9" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.5" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.4.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

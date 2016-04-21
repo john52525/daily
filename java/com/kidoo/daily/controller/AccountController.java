@@ -16,12 +16,18 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class AccountController {
 
-    @RequestMapping(value = "/001.ctr")
-    public String test001(Model model, HttpServletRequest httpServletRequest) {
+    @RequestMapping(value = "/regist.ctr", method = RequestMethod.POST)
+    public String regist(HttpServletRequest httpServletRequest) {
+        String name = httpServletRequest.getParameter("name");
         String username = httpServletRequest.getParameter("username");
         String password = httpServletRequest.getParameter("password");
+        String confirm_password = httpServletRequest.getParameter("confirm_password");
+        String agree = httpServletRequest.getParameter("agree");
+        String email = httpServletRequest.getParameter("email");
 
-        System.out.println("username:" + username + "\n" + "password:" + password);
+        System.out.println("name:" + name + "\n" + "username:" + username + "\n" +
+                "password:" + password + "\n" + "confirm_password:" + confirm_password + "\n" +
+                "agree:" + agree + "\n" + "email:" + email);
         return "login";
     }
 
