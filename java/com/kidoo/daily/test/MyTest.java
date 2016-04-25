@@ -2,10 +2,12 @@ package com.kidoo.daily.test;
 
 import com.hjzx.framework.socket.tools.Tools;
 import com.kidoo.daily.utils.json.JSONObject;
-import org.apache.http.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -13,23 +15,35 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MyTest {
 
     public static void main(String args[]) {
         MyTest myTest = new MyTest();
-        myTest.get();
+        myTest.test01();
+    }
+    public static void test01() {
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost("http://192.168.1.11:6666/001/test/test.do");
+        try {
+            HttpResponse res = client.execute(post);
+            if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
+                System.out.println("响应--->>>" + result);
+            } else {
+                System.out.println("失败--->>>" + res.getStatusLine().getStatusCode());
+            }
+            post.abort();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void httpRequest() {
@@ -154,15 +168,6 @@ public class MyTest {
         } finally {
 
         }
-    }
-
-    public void test() throws UnsupportedEncodingException {
-        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-        formparams.add(new BasicNameValuePair("param1", "value1"));
-        formparams.add(new BasicNameValuePair("param2", "value2"));
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
-        HttpPost httppost = new HttpPost("http://localhost/handler.do");
-        httppost.setEntity(entity);
     }
 
 }

@@ -8,8 +8,8 @@
     <c:if test="${empty username}">
         <form action="/daily/account/login.ctr" method="post">
             username:<input value="001" name="username" type="text"><br>
-            password:<input value="001" name="password" type="password">
-            <button type="submit">submit</button>
+            password:<input value="001" name="password" type="password"><br>
+            <button type="submit">登录</button>
         </form>
         <a href="/daily/regist.html">register</a>
     </c:if>

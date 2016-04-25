@@ -42,7 +42,6 @@ public class AccountController {
             System.out.println(token.getUsername() + "and password:" + new String(token.getPassword()));
             token.setRememberMe(true);
             Subject subject = SecurityUtils.getSubject();
-            subject.getPrincipals();
             subject.login(token);
             return "redirect:/homepage.ctr";
         } catch (AuthenticationException e) {

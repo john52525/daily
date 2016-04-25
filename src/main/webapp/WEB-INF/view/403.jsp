@@ -4,7 +4,6 @@
     <title>权限错误</title>
 </head>
 <body>
-<h1>对不起，您没有权限请求此连接！</h1>
-错误内容:${errormsg}
+<h1>出错原因:${errormsg}</h1>
 </body>
 </html>
