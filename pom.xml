@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.kidoo</groupId>
+    <groupId>www.kiddo.com</groupId>
     <artifactId>daily</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name/>
     <description/>
     <properties>
@@ -16,53 +16,91 @@
         <spring.security.version>3.2.5.RELEASE</spring.security.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <build>
+        <plugins>
+            <!--mybatis generater-->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <overwrite>true</overwrite>
+                </configuration>
+            </plugin>
+            <!--mybatis generater-->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
-        <!-- dubbo -->
+        <!-- redis -->
         <dependency>
-            <groupId>www.dandan.com</groupId>
-            <artifactId>dubbox</artifactId>
-            <version>2.8.3</version>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>1.0.2.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.19.0-GA</version>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.1.0</version>
         </dependency>
-        <!-- 如果要使用netty server -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>3.1.2.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- redis -->
+        <!-- mybatis/spring -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <!-- mybatis/spring -->
+        <!--json-->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160212</version>
+        </dependency>
+        <!--json-->
+        <!-- netty server -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-netty</artifactId>
             <version>3.0.7.Final</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.3.6</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-        </dependency>
+        <!-- netty server -->
         <dependency>
             <groupId>com.101tec</groupId>
             <artifactId>zkclient</artifactId>
             <version>0.4</version>
         </dependency>
-        <!-- dubbo -->
-        <!-- http -->
+        <!-- http client-->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5</version>
         </dependency>
-        <!-- http -->
+        <!-- http client-->
         <!-- log -->
         <dependency>
             <groupId>log4j</groupId>
@@ -96,13 +134,18 @@
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
         </dependency>
-        <!-- junit-->
+        <!-- aspects -->
         <dependency>
-            <groupId>org.junit</groupId>
-            <artifactId>com.springsource.org.junit</artifactId>
-            <version>4.7.0</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>4.1.0.RELEASE</version>
         </dependency>
-        <!-- junit-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>3.2.3.RELEASE</version>
+        </dependency>
+        <!-- aspects -->
         <!-- spring framework -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -210,11 +253,6 @@
             <artifactId>shiro-spring</artifactId>
             <version>1.2.3</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-root</artifactId>
-            <version>1.2.3</version>
-        </dependency>
         <!-- shiro -->
         <!-- datasource -->
         <dependency>
@@ -223,21 +261,10 @@
             <version>1.4</version>
         </dependency>
         <!-- datasource -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>
