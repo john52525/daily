@@ -6,16 +6,16 @@
 <body>
 <div style="border:red solid thin;outline:#00aa00 dotted thick;">
     <c:if test="${empty username}">
-        <form action="/daily/account/login.ctr" method="post">
+        <form action="/daily/account/login.do" method="post">
             username:<input value="001" name="username" type="text"><br>
             password:<input value="001" name="password" type="password"><br>
             <button type="submit">登录</button>
         </form>
-        <a href="/daily/regist.html">register</a>
+        <a href="/daily/register.html">register</a>
     </c:if>
     <c:if test="${not empty username}">
         <h2>欢迎您:${username}</h2>
-        <a href="/daily/account/logout.ctr">退出</a>
+        <a href="/daily/account/logout.do">退出</a>
     </c:if>
 </div>
 <div>

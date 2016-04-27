@@ -9,4 +9,7 @@
         <property name="sqlSessionTemplate" ref="sqlSessionTemplate"></property>
     </bean>
 
+    <bean id="redisVistorService" class="com.kidoo.daily.service.Iml.RedisVisitorServiceImpl">
+        <property name="redisTemplate" ref="redisTemplate"></property>
+    </bean>
 </beans>

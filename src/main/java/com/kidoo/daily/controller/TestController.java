@@ -6,15 +6,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class TestController {
 
-	@RequestMapping(value = "/roles.ctr")
-	public String test01() {
-		System.out.println("enter roles");
-		return "index";
+	@RequestMapping(value = "/authc.do")
+	public String test00() {
+		System.out.println("enter authc");
+		return "home";
 	}
 
-	@RequestMapping(value = "/perms.ctr")
+	@RequestMapping(value = "/roles.do")
+	public String test01() {
+		System.out.println("enter roles");
+		return "home";
+	}
+
+	@RequestMapping(value = "/perms.do")
 	public String test02() {
 		System.out.println("enter perms");
-		return "index";
+		return "home";
 	}
 }

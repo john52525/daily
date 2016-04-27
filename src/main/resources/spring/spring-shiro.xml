@@ -45,18 +45,15 @@
         <!-- Shiro的核心安全接口，这个属性是必须的 -->
         <property name="securityManager" ref="securityManager"></property>
         <!-- 要求登录时的链接(登录页面地址)，非必须的属性，默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->
-        <property name="loginUrl" value="/homepage.ctr"></property>
+        <property name="loginUrl" value="/home.do"></property>
         <!-- 登录成功后要跳转的连接(本例中此属性用不到，因为登录成功后的处理逻辑在LoginController里硬编码) -->
         <!--<property name="successUrl" value="/user.jsp"></property>-->
         <!-- 用户访问未对其授权的资源时，所显示的连接 -->
-        <property name="unauthorizedUrl" value="/403.ctr"></property>
+        <property name="unauthorizedUrl" value="/WEB-INF/view/403.jsp"></property>
         <!-- 权限配置 -->
         <property name="filterChainDefinitions">
             <value>
                 <!-- anon表示此地址不需要任何权限即可访问 -->
-                /test/login.ctr=anon
-                /static/**=anon
-                /001* = authc
                 <!-- perms[user:query]表示访问此连接需要权限为user:query的用户  -->
                 <!--/user* = perms[user:query]-->
                 /user* = authc
@@ -65,6 +62,7 @@
                 /user/del/** =roles[admin]
                 /user/edit/** =roles[manager]
 
+                /authc* = authc
                 /roles* = roles[001,002]
                 /perms* = perms[001,002]
                 <!--所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过登录验证,如果未登录则跳到/login-->

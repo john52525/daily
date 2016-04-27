@@ -13,6 +13,7 @@
     <import resource="spring-mybatis.xml"/>
     <import resource="spring-service.xml"/>
     <import resource="spring-transaction.xml"/>
+    <import resource="spring-redis.xml"/>
 
 
     <mvc:annotation-driven/>

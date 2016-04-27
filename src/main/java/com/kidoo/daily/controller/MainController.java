@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class MainController {
 
-    @RequestMapping(value = "/homepage.do")
+    @RequestMapping(value = "/home.do")
     public String homePage(Model model) {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
             String principal = (String) subject.getPrincipal();
             model.addAttribute("username", principal);
         }
-        return "index";
+        return "home";
     }
 
 }
