@@ -8,13 +8,38 @@
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
 
-    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
     <!-- 数据库保存的密码是使用MD5算法加密的，所以这里需要配置一个密码匹配对象 -->
-    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher"></bean>
+    <!--<bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher"></bean>-->
+
+    <!-- 会话Cookie 模板-->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="sid"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>
+    </bean>
+    <!--
+    sessionIdCookie：maxAge=-1 表示浏览器关闭时失效此Cookie；
+    rememberMeCookie：即记住我的Cookie，保存时长30 天；
+    -->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="2592000"/><!-- 30天-->
+    </bean>
+    <!-- rememberMe管理器-->
+    <bean id="rememberMeManager"
+          class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+    <!--
+    rememberMe管理器，cipherKey是加密rememberMe Cookie的密钥；默认AES算法；
+    -->
 
     <!-- 缓存管理 -->
-    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean>
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"/>
 
     <!--
       使用Shiro自带的JdbcRealm类
@@ -23,19 +48,20 @@
      -->
     <bean id="jdbcRealm" class="com.kidoo.daily.shiro.realm.JdbcRealm">
         <!--<property name="credentialsMatcher" ref="credentialsMatcher"></property>-->
-        <property name="permissionsLookupEnabled" value="true"></property>
-        <property name="dataSource" ref="dataSource"></property>
-        <property name="authenticationQuery" value="SELECT password FROM sec_user WHERE user_name = ?"></property>
+        <property name="permissionsLookupEnabled" value="true"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="authenticationQuery" value="SELECT password FROM sec_user WHERE user_name = ?"/>
         <property name="userRolesQuery"
-                  value="SELECT role_name from sec_user_role left join sec_role using(role_id) left join sec_user using(user_id) WHERE user_name = ?"></property>
+                  value="SELECT role_name from sec_user_role left join sec_role using(role_id) left join sec_user using(user_id) WHERE user_name = ?"/>
         <property name="permissionsQuery"
-                  value="SELECT permission_name FROM sec_role_permission left join sec_role using(role_id) left join sec_permission using(permission_id) WHERE role_name = ?"></property>
+                  value="SELECT permission_name FROM sec_role_permission left join sec_role using(role_id) left join sec_permission using(permission_id) WHERE role_name = ?"/>
     </bean>
 
     <!-- Shiro安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="realm" ref="jdbcRealm"></property>
-        <property name="cacheManager" ref="cacheManager"></property>
+        <property name="realm" ref="jdbcRealm"/>
+        <property name="cacheManager" ref="cacheManager"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
     </bean>
     <!--
        Shiro主过滤器本身功能十分强大，其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行
@@ -43,28 +69,32 @@
     -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <!-- Shiro的核心安全接口，这个属性是必须的 -->
-        <property name="securityManager" ref="securityManager"></property>
+        <property name="securityManager" ref="securityManager"/>
         <!-- 要求登录时的链接(登录页面地址)，非必须的属性，默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->
-        <property name="loginUrl" value="/home.do"></property>
+        <property name="loginUrl" value="/home.do"/>
         <!-- 登录成功后要跳转的连接(本例中此属性用不到，因为登录成功后的处理逻辑在LoginController里硬编码) -->
         <!--<property name="successUrl" value="/user.jsp"></property>-->
         <!-- 用户访问未对其授权的资源时，所显示的连接 -->
-        <property name="unauthorizedUrl" value="/WEB-INF/view/403.jsp"></property>
+        <property name="unauthorizedUrl" value="/WEB-INF/view/403.jsp"/>
         <!-- 权限配置 -->
         <property name="filterChainDefinitions">
             <value>
                 <!-- anon表示此地址不需要任何权限即可访问 -->
-                <!-- perms[user:query]表示访问此连接需要权限为user:query的用户  -->
-                <!--/user* = perms[user:query]-->
-                /user* = authc
+                <!--/user* = perms[user:query] perms[user:query]表示访问此连接需要权限为user:query的用户  -->
                 <!-- roles[manager]表示访问此连接需要用户的角色为manager -->
                 /user/add* =roles[manager]
                 /user/del/** =roles[admin]
-                /user/edit/** =roles[manager]
+                /user/edit/** =roles[admin]
 
+                /authc* = authc
+                /user* = user
                 /authc* = authc
                 /roles* = roles[001,002]
                 /perms* = perms[001,002]
+                <!--
+                “/authc = authc”表示访问该地址用户必须身份验证通过（Subject.isAuthenticated()==true）；
+                而“/user* = user”表示访问该地址的用户是身份验证通过或RememberMe登录的都可以。
+                -->
                 <!--所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过登录验证,如果未登录则跳到/login-->
                 <!--/** = authc-->
             </value>
@@ -75,9 +105,9 @@
        开启Shiro的注解(如@RequiresRoles，@RequiresPermissions)，需借助SpringAOP扫描使用Shiro注解的类，
        并在必要时进行安全逻辑验证
     -->
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"></bean>
+    <!--<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"></property>
-    </bean>
+        <property name="securityManager" ref="securityManager"/>
+    </bean>-->
 
 </beans>
