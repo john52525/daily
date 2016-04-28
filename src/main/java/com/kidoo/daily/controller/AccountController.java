@@ -68,7 +68,6 @@ public class AccountController {
             return "403";
         }
 
-
         User user = new User();
         Date date = new Date();
         user.setCreatedTime(date);
@@ -96,7 +95,6 @@ public class AccountController {
             subject.login(token);
             return "redirect:/home.do";
         } catch (AuthenticationException e) {
-            logger.error(e.getMessage());
             model.addAttribute("errormsg", e.getMessage());
             return "403";
         }
