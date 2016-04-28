@@ -39,17 +39,7 @@
         </plugins>
     </build>
     <dependencies>
-        <!-- redis -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-            <version>1.0.2.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.1.0</version>
-        </dependency>
+        <!-- test -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -61,6 +51,18 @@
             <artifactId>spring-test</artifactId>
             <version>3.1.2.RELEASE</version>
             <scope>test</scope>
+        </dependency>
+        <!-- test -->
+        <!-- redis -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>1.0.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.1.0</version>
         </dependency>
         <!-- redis -->
         <!-- mybatis/spring -->
@@ -134,6 +136,7 @@
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
         </dependency>
+        <!-- servlet -->
         <!-- aspects -->
         <dependency>
             <groupId>org.springframework</groupId>

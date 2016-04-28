@@ -21,14 +21,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MyTest {
 
 	public static void main(String args[]) {
-		MyTest myTest = new MyTest();
-		myTest.test01();
+		System.out.println(new Date()+"1");
 	}
 
 	public void test01() {

@@ -36,6 +36,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -380,6 +381,7 @@ public class JdbcRealm extends AuthorizingRealm {
 	}
 
 	protected Set<String> getRoleNamesForUser(Connection conn, String username) throws SQLException {
+		System.out.println("getRoleNamesForUser:"+new Date());
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Set<String> roleNames = new LinkedHashSet<String>();
