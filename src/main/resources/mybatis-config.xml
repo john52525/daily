@@ -7,14 +7,15 @@
         <property name="dialect" value="mysql"/>
         <property name="pageSqlId" value=".*Page$"/>
     </properties>
+
     <!-- 配置mysql分页拦截器 start -->
-    <!--<plugins>
-        <plugin interceptor="com.hjzx.frontcore.framework.mybatis.intercepter.PaginationInterceptor"></plugin>
-    </plugins>-->
-    <!-- refelct file -->
+    <plugins>
+        <plugin interceptor="com.kidoo.daily.mybatis.Interceptor.PaginationInterceptor"/>
+    </plugins>
 
     <mappers>
         <mapper resource="mapper/UserMapper.xml"/>
     </mappers>
+
 
 </configuration>
