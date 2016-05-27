@@ -39,6 +39,9 @@
         </plugins>
     </build>
     <dependencies>
+        <!-- front core -->
+
+        <!-- front core -->
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>

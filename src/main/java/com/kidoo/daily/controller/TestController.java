@@ -1,15 +1,23 @@
 package com.kidoo.daily.controller;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.shiro.util.JdbcUtils;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.sql.*;
 import java.util.List;
 
 @Controller
 public class TestController {
+
+    @Autowired
+    protected BasicDataSource dataSource;
+
     @Autowired
     SqlSessionTemplate sqlSessionTemplate;
 
@@ -45,4 +53,29 @@ public class TestController {
             System.out.println(i);
         }
     }
+
+    @RequestMapping(value = "/db.do")
+    public String test05(Model model) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            Connection connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement("SELECT password FROM sec_user WHERE user_name = ?");
+            preparedStatement.setString(1, "000000");
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String string = resultSet.getString(1);
+                System.out.println("result is===>>>" + string);
+                model.addAttribute("string", string);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", e.getMessage());
+        } finally {
+            JdbcUtils.closeStatement(preparedStatement);
+            JdbcUtils.closeResultSet(resultSet);
+        }
+        return "test";
+    }
+
 }

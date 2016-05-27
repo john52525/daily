@@ -116,7 +116,7 @@ public class JdbcRealm extends AuthorizingRealm {
         return info;
     }
 
-    private String getPasswordForUser(Connection conn, String username) throws SQLException {
+    private String  getPasswordForUser(Connection conn, String username) throws SQLException {
 
         String result = "";
 
